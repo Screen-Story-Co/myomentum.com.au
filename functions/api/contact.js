@@ -9,7 +9,7 @@ const ACCOUNT_ID = '9c8e079bb5923e09a1617f592c807bf2';
 const SEND_URL = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/email/sending/send`;
 
 const FROM = 'hello@myomentum.com.au';
-const TO = 'phil@myomentum.com.au';
+const TO = 'd@screenstory.co';
 
 // Where to send the visitor back to after a send. This value is user-controlled
 // and lands in a Location header, so accept a same-site path only — anything
