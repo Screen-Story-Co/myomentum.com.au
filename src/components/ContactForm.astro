@@ -1,0 +1,99 @@
+---
+// Shared contact form. Used by the Contact page and the homepage Contact section.
+//
+// Posts to /api/contact, which 302s back with ?sent=1. These pages are static,
+// so the confirmation cannot be decided at build time — it ships hidden and is
+// revealed client-side from the query string.
+
+export interface Props {
+  /** Same-site path the Function should return to after a send. */
+  next?: string;
+}
+
+const { next = '/contact' } = Astro.props;
+---
+
+<div class="alert-success" role="alert" data-contact-success hidden>
+  Your message has been sent. I&rsquo;ll be in touch soon.
+</div>
+
+<form id="contact-form" action="/api/contact" method="POST" class="contact-form">
+  <input type="hidden" name="_next" value={next} />
+
+  <div class="field">
+    <label for="name" class="field-label">Name</label>
+    <input type="text" id="name" name="name" required class="field-input" placeholder="Your full name" />
+  </div>
+
+  <div class="field">
+    <label for="email" class="field-label">Email</label>
+    <input type="email" id="email" name="email" required class="field-input" placeholder="you@example.com" />
+  </div>
+
+  <div class="field">
+    <label for="message" class="field-label">Message</label>
+    <textarea id="message" name="message" rows="6" required class="field-input" placeholder="Tell me about your project..."></textarea>
+  </div>
+
+  <input type="text" name="_gotcha" class="gotcha" tabindex="-1" autocomplete="off" />
+
+  <button type="submit" class="btn-submit">
+    <span class="btn-text">Send Message</span>
+    <span class="btn-loading-indicator">Sending&hellip;</span>
+  </button>
+</form>
+
+<script is:inline>
+  (function () {
+    var alert = document.querySelector('[data-contact-success]');
+    if (alert && new URLSearchParams(location.search).get('sent') === '1') {
+      alert.hidden = false;
+      alert.scrollIntoView({ block: 'center' });
+    }
+
+    var form = document.getElementById('contact-form');
+    if (!form) return;
+    form.addEventListener('submit', function () {
+      var btn = form.querySelector('button[type="submit"]');
+      var t = btn.querySelector('.btn-text');
+      var l = btn.querySelector('.btn-loading-indicator');
+      if (t) t.style.display = 'none';
+      if (l) l.style.display = 'inline';
+    });
+  })();
+</script>
+
+<style>
+  .contact-form { display: flex; flex-direction: column; gap: 1.5rem; max-width: 34rem; }
+  .field { display: flex; flex-direction: column; gap: .5rem; }
+  .field-label {
+    font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--muted);
+  }
+  .field-input {
+    font-family: var(--font-body); font-size: .95rem; font-weight: 300;
+    color: var(--fg); background: var(--plate);
+    border: 1px solid var(--border); padding: .8rem .9rem;
+    transition: border-color .22s;
+  }
+  .field-input:focus { outline: none; border-color: var(--accent); }
+  .field-input::placeholder { color: var(--faint); }
+  textarea.field-input { resize: vertical; line-height: 1.6; }
+  .gotcha { display: none; }
+
+  .btn-submit {
+    align-self: flex-start; cursor: pointer;
+    font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--bg); background: var(--accent);
+    border: 1px solid var(--accent); padding: .85rem 1.6rem;
+    transition: background .22s, color .22s;
+  }
+  .btn-submit:hover { background: transparent; color: var(--accent); }
+  .btn-loading-indicator { display: none; }
+
+  .alert-success {
+    border: 1px solid var(--accent); border-left-width: 2px;
+    padding: .9rem 1.1rem; margin-bottom: 2rem;
+    font-size: .85rem; color: var(--accent); max-width: 34rem;
+  }
+</style>

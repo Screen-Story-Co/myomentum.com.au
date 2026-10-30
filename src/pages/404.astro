@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found | Myomentum">
+  <section class="sheet">
+    <div class="sheet-rail">
+      <span class="rail-label">Missing</span>
+    </div>
+    <div class="sheet-body">
+      <p class="sheet-note">Error 404 &nbsp;&middot;&nbsp; No such page</p>
+
+      <h1 class="nf-title">This page isn&rsquo;t here.</h1>
+      <p class="nf-body">
+        The address you followed doesn&rsquo;t match anything on the site &mdash; it may have
+        moved, or the link that brought you here was mistyped. Everything below is still
+        where it should be.
+      </p>
+
+      <nav class="nf-links" aria-label="Where to go next">
+        <a href="/">Profile</a>
+        <a href="/journal">Journal</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+  .nf-body { color: var(--muted); font-size: 1.02rem; max-width: 56ch; }
+  .nf-links { display: flex; flex-wrap: wrap; gap: 1.75rem; margin-top: 2.5rem; }
+  .nf-links a {
+    font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--muted); position: relative; padding-bottom: 3px;
+  }
+  .nf-links a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: currentColor; transform: scaleX(0); transform-origin: left;
+    transition: transform .35s cubic-bezier(.23,1,.32,1), background-color .3s;
+  }
+  .nf-links a:hover { color: var(--accent); }
+  .nf-links a:hover::after { transform: scaleX(1); }
+</style>

@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+<Base title="Contact & Location | Myomentum" description="Find Myomentum at 6–8 Farmer Street, St Kilda. Hours, map, phone & contact form.">
+  <div class="container">
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Contact</span></div>
+      <div class="sheet-body">
+        <h1>Find us</h1>
+        <p><strong>Myomentum</strong><br/>6–8 Farmer Street<br/>St Kilda VIC 3182</p>
+        <p>Phone: <a href="tel:+61423611000">0423 611 000</a></p>
+        <div class="map">
+          <iframe src="https://www.google.com/maps?q=6-8+Farmer+Street+St+Kilda+VIC+3182&z=17&output=embed" width="100%" height="360" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map — Myomentum, St Kilda"></iframe>
+        </div>
+        <p class="muted"><a href="https://maps.google.com/?q=6-8+Farmer+Street+St+Kilda+VIC+3182" target="_blank" rel="noopener">Open in Google Maps →</a></p>
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Hours</span></div>
+      <div class="sheet-body">
+        <h2>Appointment hours</h2>
+        <ul class="hours">
+          <li><span>Monday</span><span>Closed</span></li>
+          <li><span>Tue & Thu</span><span>8am – 5pm</span></li>
+          <li><span>Wednesday</span><span>9am – 6pm</span></li>
+          <li><span>Fri & Sat</span><span>8am – 1pm</span></li>
+        </ul>
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Message</span></div>
+      <div class="sheet-body">
+        <h2>Email us</h2>
+        <ContactForm next="/contact" />
+      </div>
+    </section>
+  </div>
+</Base>
+<style> h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.7rem,3.5vw,2.2rem)} h2{font-family:var(--font-display);font-weight:400;font-size:1.35rem;margin-top:.2rem} .map{margin:1rem 0;border:1px solid var(--border)} .hours{list-style:none} .hours li{display:flex;justify-content:space-between;max-width:28rem;padding:.35rem 0;border-bottom:1px solid var(--border)} .muted{color:var(--muted);font-size:.9rem} </style>

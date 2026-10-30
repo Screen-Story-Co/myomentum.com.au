@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Bookings | Myomentum" description="Book a myotherapy appointment with Phil Papadopoulos in St Kilda via Cliniko.">
+  <div class="container">
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Bookings</span></div>
+      <div class="sheet-body">
+        <h1>Book an appointment</h1>
+        <p>Secure online bookings via Cliniko. Choose a time that suits you — you'll get a confirmation by email.</p>
+        <div class="bookings-wrap">
+          <iframe src="https://myomentum.cliniko.com/bookings?embedded=true" title="Cliniko bookings" loading="lazy" frameborder="0" scrolling="auto" width="100%" height="1000"></iframe>
+        </div>
+        <p class="muted">Trouble loading? <a href="https://myomentum.cliniko.com/bookings" target="_blank" rel="noopener">Open bookings in a new tab</a>.</p>
+      </div>
+    </section>
+  </div>
+</Base>
+<style> h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.7rem,3.5vw,2.2rem)} .bookings-wrap{margin:1rem 0;border:1px solid var(--border);background:#fff} .muted{color:var(--muted);font-size:.9rem} </style>

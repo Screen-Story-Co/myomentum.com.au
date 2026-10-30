@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const profile = (await getCollection('profile'))[0];
+const posts = (await getCollection('blog')).slice(0,2);
+---
+<Base title="Myotherapy in St Kilda, Prahran, Balaclava & surrounds | Myomentum" description="Providing an integrated approach to muscle, joint and nerve related pain. Clinical myotherapy by Phil Papadopoulos in St Kilda — book via Cliniko.">
+  <header class="cover">
+    <div class="cover-media"><img src="/images/hero.jpg" alt="Myotherapy treatment room" /></div>
+    <div class="cover-plate">
+      <h1 class="cover-name">Myomentum</h1>
+      <p class="cover-role">Myotherapy in St Kilda</p>
+      <p class="cover-tagline">An integrated approach to muscle, joint and nerve pain.</p>
+      <a class="btn" href="/bookings">Book an appointment</a>
+    </div>
+  </header>
+
+  <section class="sheet">
+    <div class="sheet-rail"><span class="rail-label">Welcome</span></div>
+    <div class="sheet-body">
+      <p class="lede">Clinical myotherapy for athletes, performers and anyone living with persistent pain — assessment that considers both physical and psychosocial factors, and a plan built around <em>your</em> experience of pain.</p>
+      <div class="actions">
+        <a class="btn" href="/bookings">Book via Cliniko</a>
+        <a class="btn btn-ghost" href="/about">Meet Phil</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-rail"><span class="rail-label">Location</span></div>
+    <div class="sheet-body">
+      <h2>Find us</h2>
+      <p><strong>6–8 Farmer Street, St Kilda VIC 3182</strong><br/>St Kilda / Prahran / Balaclava & surrounds</p>
+      <p><a href="/contact">Directions & contact →</a></p>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-rail"><span class="rail-label">Hours</span></div>
+    <div class="sheet-body">
+      <h2>Appointment hours</h2>
+      <ul class="hours">
+        <li><span>Monday</span><span>Closed</span></li>
+        <li><span>Tue & Thu</span><span>8am – 5pm</span></li>
+        <li><span>Wednesday</span><span>9am – 6pm</span></li>
+        <li><span>Fri & Sat</span><span>8am – 1pm</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-rail"><span class="rail-label">Trusted</span></div>
+    <div class="sheet-body trusted">
+      <img src="/images/hicaps.webp" alt="HICAPS" height="48" />
+      <img src="/images/ma-logo.png" alt="Myotherapy Association Australia" height="48" />
+      <img src="/images/the-hunt.png" alt="The Hunt Strength & Conditioning" height="48" />
+      <p class="sheet-note">HICAPS available · MA member · Partner: The Hunt</p>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Journal</span></div>
+      <div class="sheet-body">
+        <h2>Latest</h2>
+        <ul>{posts.map(p => <li><a href={`/blog/${p.slug}`}>{p.data.title}</a> — <span class="muted">{p.data.date}</span></li>)}</ul>
+        <p><a href="/blog">All posts →</a></p>
+      </div>
+    </section>
+  )}
+</Base>
+<style>
+.cover{position:relative;width:100vw;margin-left:calc(50% - 50vw);min-height:62vh;display:flex;align-items:flex-end;overflow:hidden;background:#101010;margin-top:-1.2rem}
+.cover-media{position:absolute;inset:0} .cover-media img{width:100%;height:100%;object-fit:cover}
+.cover-media::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(8,8,8,.92) 0%, rgba(8,8,8,.45) 55%, rgba(8,8,8,.35) 100%)}
+.cover-plate{position:relative;max-width:1120px;margin:0 auto;padding:5rem 2rem 2.5rem;color:#f7f7f4;width:100%}
+.cover-name{font-family:var(--font-display);font-size:clamp(2.6rem,7vw,5rem);line-height:.95;letter-spacing:-.02em}
+.cover-role{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2.8vw,2rem);color:rgba(247,247,244,.95);margin-top:.35rem}
+.cover-tagline{margin-top:1rem;color:rgba(247,247,244,.9);font-size:1.02rem;max-width:42ch}
+.btn{display:inline-block;margin-top:1.1rem;padding:.75rem 1.15rem;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase}
+.btn-ghost{background:transparent;color:var(--fg);border-color:var(--border);margin-left:.6rem}
+.lede{font-family:var(--font-display);font-size:clamp(1.08rem,1.9vw,1.28rem);line-height:1.68;color:#2b2b30}
+.actions{margin-top:1rem}
+.hours{list-style:none;margin-top:.6rem} .hours li{display:flex;justify-content:space-between;max-width:28rem;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.95rem}
+.trusted{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap} .trusted img{max-height:48px;width:auto}
+</style>

@@ -1,0 +1,20 @@
+// Remote MCP server for yiapanis.co content editing.
+// Agent connects (Claude connector / Gemini CLI / Hermes / any MCP client) →
+// OAuth 2.1 (editor key at consent) → tools commit via GitHub contents API →
+// CI deploys preview. Production site is never touched.
+{
+  "name": "yiapanis-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "kv_namespaces": [
+    { "binding": "OAUTH_KV", "id": "a83a321ba0094dcabb22c97b8ec989c5" }
+  ],
+  "routes": [
+    { "pattern": "mcp.yiapanis.co", "custom_domain": true }
+  ],
+  "vars": {
+    "REPO": "Screen-Story-Co/yiapanis.co",
+    "PREVIEW_BASE": "https://yiapanis-co.preview.screenstory.co"
+  }
+}

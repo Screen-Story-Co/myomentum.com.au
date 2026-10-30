@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const profile = (await getCollection('profile'))[0];
+---
+<Base title="About Phil Papadopoulos — Clinical Myotherapist | Myomentum" description="Meet Phil Papadopoulos, clinical myotherapist (BHSc) in St Kilda — sports & occupational injuries, FIFA Football Medicine, Human Movement specialist.">
+  <div class="container">
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">Practitioner</span></div>
+      <div class="sheet-body">
+        <h1>Phil Papadopoulos</h1>
+        <p class="kicker">Clinical Myotherapist — BHSc (Clinical Myotherapy), FIFA Football Medicine (Dip.), Certified Human Movement Specialist</p>
+        <article class="lede" set:html={profile.body} />
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-rail"><span class="rail-label">At a glance</span></div>
+      <div class="sheet-body">
+        <h2>What to expect</h2>
+        <ul>
+          <li>Case history & posture evaluation</li>
+          <li>Orthopaedic & basic neurological testing</li>
+          <li>Compensatory movement & neurokinetic chain assessment</li>
+          <li>Trigger-point palpation & treatment plan</li>
+        </ul>
+        <h2>Modalities</h2>
+        <ul>
+          <li>Manual therapy, massage, myofascial release, trigger-point therapy</li>
+          <li>Dry needling, TENS, joint mobilisation, taping</li>
+          <li>Exercise prescription & lifestyle management</li>
+        </ul>
+        <p><a class="btn" href="/bookings">Book with Phil</a></p>
+      </div>
+    </section>
+  </div>
+</Base>
+<style>
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.01em}
+.kicker{color:var(--muted);font-size:.92rem;margin:.4rem 0 1rem;max-width:62ch}
+.lede{max-width:70ch} .lede :global(p){margin-top:1rem;line-height:1.72;color:#2b2b30}
+.lede :global(p:first-of-type){font-size:1.12rem}
+.btn{display:inline-block;margin-top:1rem;padding:.7rem 1.05rem;background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase}
+ul{margin:.6rem 0 1rem 1.2rem} li{margin:.25rem 0}
+</style>

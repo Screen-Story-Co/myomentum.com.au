@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Manager — Screen Story Co.</title>
+
+  <!-- Fonts: Oswald + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --void: #0a0a0a;
+      --ivory: #f4efe6;
+      --smoke: #6b6560;
+      --accent: #b85c50;
+      --accent-deep: #8a3f35;
+      --card: #1a1918;
+      --card-raised: #222120;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--void);
+      color: var(--ivory);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .cms-brand {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ivory);
+      margin-bottom: 0.5rem;
+    }
+    .cms-sub {
+      color: var(--smoke);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    .login-box {
+      background: var(--card);
+      border: 1px solid rgba(107,101,96,0.2);
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .login-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--accent);
+      color: var(--ivory);
+      border: none;
+      padding: 0.9rem 1.8rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .login-btn:hover { background: var(--accent-deep); }
+    .loading {
+      color: var(--smoke);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    .error {
+      color: var(--accent);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+    .success { color: #5a9; }
+    /* Decap overrides */
+    .nc-root { --backgroundColor: var(--void) !important; }
+    .nc-editor { background: var(--card) !important; }
+    .nc-sidebar { background: var(--card) !important; border-right: 1px solid rgba(107,101,96,0.15) !important; }
+    .nc-sidebar-header { background: var(--card-raised) !important; }
+    .nc-sidebar-list-item { color: var(--ivory) !important; }
+    .nc-sidebar-list-item:hover { background: rgba(184,92,80,0.1) !important; }
+    .nc-card { background: var(--card) !important; border-color: rgba(107,101,96,0.15) !important; }
+    .nc-field label { color: var(--ivory) !important; }
+    .nc-field input, .nc-field textarea, .nc-field select { background: var(--card-raised) !important; color: var(--ivory) !important; border-color: rgba(107,101,96,0.2) !important; }
+    .nc-field input:focus, .nc-field textarea:focus, .nc-field select:focus { border-color: var(--accent) !important; outline: none !important; }
+    .nc-button { background: var(--accent) !important; color: var(--ivory) !important; border: none !important; }
+    .nc-button:hover { background: var(--accent-deep) !important; }
+    .nc-dropdown-list { background: var(--card) !important; }
+    .nc-dropdown-item { color: var(--ivory) !important; }
+    .nc-dropdown-item:hover { background: rgba(184,92,80,0.1) !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Login prompt (shown when no Studio token) -->
+  <div id="login-panel" class="login-box">
+    <div class="cms-brand">Screen Story Co.</div>
+    <div class="cms-sub">Content Manager</div>
+    <p class="loading" id="loading-msg" style="display:none;">Authenticating via Studio...</p>
+    <p class="error" id="error-msg" style="display:none;"></p>
+    <a id="studio-login-link" class="login-btn" href="https://studio.screenstory.co">
+      Log in via Studio
+    </a>
+  </div>
+
+  <!-- Decap CMS mounts here once authenticated -->
+  <div id="nc-root" style="display:none;"></div>
+
+  <!-- Decap CMS (no SRI: floating @^3.0.0 range — SRI would break on CDN version bumps; pin + SRI when we pin the version) -->
+  <script>window.CMS_MANUAL_INIT = true;</script>
+  <!-- netlifyIdentity shim: Decap's git-gateway auth page drives off
+       window.netlifyIdentity; without it Decap renders its own GoTrue
+       email/password form. We feed it the Studio JWT instead. -->
+  <script>
+    (function() {
+      var listeners = {};
+      function makeUser(token) {
+        return {
+          id: 'studio',
+          email: 'cms@screenstory.co',
+          user_metadata: { full_name: 'Screen Story Studio' },
+          token: token,
+          jwt: function() { return Promise.resolve(sessionStorage.getItem('studio_jwt') || token); },
+        };
+      }
+      var stored = sessionStorage.getItem('studio_jwt');
+      var user = stored ? makeUser(stored) : null;
+      window.netlifyIdentity = {
+        // Decap's authClient.clearStore() resets this store on logout errors
+        store: { user: null, modal: { page: 'login' }, saving: false },
+        currentUser: function() { return user; },
+        on: function(ev, cb) { (listeners[ev] = listeners[ev] || []).push(cb); },
+        init: function() { (listeners['init'] || []).forEach(function(cb) { cb(); }); },
+        open: function() { window.location.href = 'https://studio.screenstory.co'; },
+        close: function() {},
+        logout: function() { sessionStorage.removeItem('studio_jwt'); user = null; window.location.reload(); },
+        // Called once the token has been verified against /api/decap/identity,
+        // so commits carry the real author name/email
+        _setUser: function(identity) {
+          user = makeUser(identity.token || stored);
+          if (identity.email) user.email = identity.email;
+          if (identity.id) user.id = identity.id;
+          if (identity.user_metadata) user.user_metadata = identity.user_metadata;
+          // Decap's git-gateway backend waits on on('init') before touching the
+          // identity widget — flush listeners now that the user is real.
+          (listeners['init'] || []).forEach(function(cb) { cb(); });
+        },
+      };
+    })();
+  </script>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    (async function() {
+      const loginPanel = document.getElementById('login-panel');
+      const loading = document.getElementById('loading-msg');
+      const error = document.getElementById('error-msg');
+      const cmsRoot = document.getElementById('nc-root');
+      const studioLink = document.getElementById('studio-login-link');
+
+      // Step 1: Capture token from URL param (passed by Studio dashboard)
+      const urlParams = new URLSearchParams(window.location.search);
+      let token = urlParams.get('token');
+
+      // If URL has token, store it and clean the URL
+      if (token) {
+        sessionStorage.setItem('studio_jwt', token);
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+
+      // Also accept token from sessionStorage (previously stored)
+      if (!token) {
+        token = sessionStorage.getItem('studio_jwt');
+      }
+
+      // Step 2: Verify token is valid before showing CMS
+      if (token) {
+        loading.style.display = 'block';
+        studioLink.style.display = 'none';
+
+        try {
+          const res = await fetch('/api/decap/identity', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+
+          if (!res.ok) {
+            // Token invalid or expired — clear it and show login
+            sessionStorage.removeItem('studio_jwt');
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            error.textContent = 'Session expired. Please log in again via Studio.';
+            studioLink.style.display = 'inline-flex';
+            return;
+          }
+
+          const identity = await res.json();
+
+          // Feed the verified Studio identity into the netlifyIdentity shim so
+          // Decap's git-gateway auth uses it (email/full_name for commit author)
+          window.netlifyIdentity._setUser(identity);
+
+          // Hide login, show CMS
+          loginPanel.style.display = 'none';
+          cmsRoot.style.display = 'block';
+
+          // Step 3: Initialize Decap CMS
+          // (no fetch monkey-patch: Decap's git-gateway tokenPromise injects the
+          // Studio JWT itself via netlifyIdentity user.jwt(); gateway_url ends in
+          // /github so the proxy receives literal GitHub paths + query strings)
+          CMS.init({
+            config: {
+              backend: {
+                name: 'git-gateway',
+                branch: 'main',
+                gateway_url: '/api/decap/git-gateway/github',
+              },
+              publish_mode: 'editorial_workflow',
+              media_folder: 'public/images',
+              public_folder: '/images',
+              collections: [
+                {
+                  name: 'profile', label: 'Profile', folder: 'src/content/profile',
+                  create: false, delete: false,
+                  fields: [
+                    { label: 'Name', name: 'name', widget: 'string' },
+                    { label: 'Tagline', name: 'tagline', widget: 'string', required: false },
+                    { label: 'Headshot', name: 'headshot', widget: 'image', required: false },
+                    { label: 'Body', name: 'body', widget: 'markdown' },
+                  ]
+                },
+                {
+                  name: 'films', label: 'Films', folder: 'src/content/films',
+                  create: true, delete: true,
+                  fields: [
+                    { label: 'Title', name: 'title', widget: 'string' },
+                    { label: 'Genre', name: 'genre', widget: 'list', allow_add: true },
+                    { label: 'Type', name: 'type', widget: 'string', required: false },
+                    { label: 'Synopsis', name: 'synopsis', widget: 'text' },
+                    { label: 'Video URL', name: 'videoUrl', widget: 'string', required: false },
+                    { label: 'Poster', name: 'poster', widget: 'image', required: false },
+                    { label: 'Order', name: 'order', widget: 'number', value_type: 'int', default: 0 },
+                    { label: 'Year', name: 'year', widget: 'number', value_type: 'int', required: false },
+                    { label: 'Body', name: 'body', widget: 'markdown', required: false },
+                  ]
+                },
+                {
+                  name: 'blog', label: 'Journal', folder: 'src/content/blog',
+                  create: true, delete: true,
+                  fields: [
+                    { label: 'Title', name: 'title', widget: 'string' },
+                    { label: 'Date', name: 'date', widget: 'datetime', date_format: 'YYYY-MM-DD', time_format: false },
+                    { label: 'Draft', name: 'draft', widget: 'boolean', default: false },
+                    { label: 'Excerpt', name: 'excerpt', widget: 'text', required: false },
+                    { label: 'Body', name: 'body', widget: 'markdown' },
+                  ]
+                },
+
+              ]
+            }
+          });
+
+        } catch (err) {
+          loading.style.display = 'none';
+          error.style.display = 'block';
+          error.textContent = 'Auth error: ' + err.message;
+          studioLink.style.display = 'inline-flex';
+        }
+
+      } else {
+        // No token at all — show login prompt
+        loading.style.display = 'none';
+        studioLink.style.display = 'inline-flex';
+      }
+    })();
+  </script>
+
+</body>
+</html>

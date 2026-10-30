@@ -1,0 +1,19 @@
+{
+  "name": "yiapanis-mcp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.10.3",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "agents": "^0.23.0",
+    "js-yaml": "^5.4.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260917.1"
+  }
+}

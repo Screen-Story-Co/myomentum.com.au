@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).filter(p=>!p.data.draft).sort((a,b)=> new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const fmt = d => new Date(d).toLocaleDateString('en-AU',{year:'numeric',month:'long',day:'numeric'});
+---
+<Base title="Blog | Myomentum" description="News and articles from Myomentum — myotherapy, movement and recovery.">
+  <div class="container">
+    <section class="sheet"><div class="sheet-rail"><span class="rail-label">Blog</span></div>
+      <div class="sheet-body">
+        <p class="sheet-note">{posts.length} {posts.length===1?'post':'posts'}</p>
+        <div class="journal-grid">
+          {posts.map(p=> <article class="journal-item"><p class="journal-date">{fmt(p.data.date)}</p><h3 class="journal-title"><a href={`/blog/${p.slug}`}>{p.data.title}</a></h3>{p.data.excerpt && <p class="journal-excerpt">{p.data.excerpt}</p>}</article>)}
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
