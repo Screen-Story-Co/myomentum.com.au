@@ -56,14 +56,16 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
   <style is:global>
     :root {
       /* Paper programme: off-white stock, pure-white plates, ink, one oxide accent */
-      --bg: #fbfbf9;
+      --bg: #f6f8fa;
       --plate: #ffffff;
       --fg: #141414;
       --muted: #6a6a66;
       --faint: #9c9c96;
-      --accent: #9a3324;
-      --border: #dcdcd6;
-      --rule: #c9c9c2;
+      --accent: #2ab3ff;
+      --accent-2: #33b1e8;
+      --accent-ink: #0e4a6b;
+      --border: #e2e8ef;
+      --rule: #d6e4f0;
       --font-display: 'Newsreader', Georgia, serif;
       --font-body: 'Public Sans', system-ui, sans-serif;
       --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -85,6 +87,20 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     .trusted img:hover { transform: translateY(-2px); opacity: 1; }
     .map { overflow: hidden; border-radius: 12px; }
     .sheet { border-radius: 12px; }
+    .hero { clip-path: inset(0); }
+    .hero-bg img { will-change: transform; transform: scale(1.06); transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+    .hero.in .hero-bg img { transform: scale(1); }
+    .hero-logo { transition: transform .9s cubic-bezier(.16,1,.3,1), opacity .9s ease; }
+    .hero.in .hero-logo { animation: floatIn .9s ease both; }
+    @keyframes floatIn { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: none; } }
+    .hero-line, .hero-cta, .hero-address { opacity:0; transform: translateY(10px); transition: opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+    .hero.in .hero-line { opacity:1; transform:none; transition-delay:.12s; }
+    .hero.in .hero-cta { opacity:1; transform:none; transition-delay:.22s; }
+    .hero.in .hero-address { opacity:1; transform:none; transition-delay:.30s; }
+    .site-nav a[aria-current="page"]::after { background: var(--accent); height:2px; }
+    .btn { background: var(--accent); border-color: var(--accent); color:#fff; }
+    .btn:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+
 
     body {
       font-family: var(--font-body);
@@ -603,6 +619,19 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     els.forEach(e => e.classList.add('reveal'));
     const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }}), {threshold:.12});
     els.forEach(e => io.observe(e));
+    // hero enter
+    requestAnimationFrame(() => document.querySelector('.hero')?.classList.add('in'));
+    // subtle parallax on scroll
+    let ticking=false;
+    addEventListener('scroll', () => {
+      if(ticking) return; ticking=true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY * 0.12;
+        document.querySelectorAll('.hero-bg img').forEach(img => img.style.transform = `translateY(${y}px) scale(${1 - Math.min(window.scrollY*0.00008,0.04)})`);
+        ticking=false;
+      });
+    }, {passive:true});
+
   </script>
 </body>
 </html>
