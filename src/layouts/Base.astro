@@ -138,8 +138,8 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     .header-inner {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: .9rem 1.25rem;
+      justify-content: center;
+      padding: 1.2rem 1rem;
       position: relative;
     }
     .hamburger {
@@ -607,8 +607,7 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
         <span></span>
         <span></span>
       </button>
-      <a class="brand" href="/"><img src="/images/logo.png" alt="MYOMENTUM" width="220" height="36" style="height:28px;width:auto;opacity:1" /><span class="sr-only"><span class="myo">MYO</span><span class="mentum">MENTUM</span></span></a>
-      <nav class="site-nav" id="site-nav" aria-label="Main">
+<nav class="site-nav" id="site-nav" aria-label="Main">
         {nav.map(item => <a href={item.href} aria-current={Astro.url.pathname === item.href || Astro.url.pathname === item.href + '/' ? 'page' : undefined}>{item.label}</a>)}
       </nav>
     </div>
