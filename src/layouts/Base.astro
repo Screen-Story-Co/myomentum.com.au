@@ -71,6 +71,21 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+    /* fluid type */
+    :root { --gap: clamp(1rem, 3vw, 2rem); }
+    .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .site-header.scrolled { box-shadow: 0 6px 24px rgba(0,0,0,.06); background: rgba(251,251,249,.92); }
+    .site-nav a { transition: opacity .2s, color .2s, transform .2s; }
+    .site-nav a:hover { transform: translateY(-1px); }
+    .hero-cta,.btn { transition: transform .2s, background .2s, color .2s, box-shadow .2s; }
+    .hero-cta:hover,.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .trusted img { transition: transform .2s, opacity .2s; }
+    .trusted img:hover { transform: translateY(-2px); opacity: 1; }
+    .map { overflow: hidden; border-radius: 12px; }
+    .sheet { border-radius: 12px; }
+
     body {
       font-family: var(--font-body);
       background: var(--bg);
@@ -565,7 +580,7 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
   </main>
 
   <footer class="site-footer">
-    &copy; 2025 Myomentum &nbsp;&middot;&nbsp; <a href="https://www.screenstory.co" style="text-decoration:underline">Website by Screen Story Co.</a>
+    &copy; {new Date().getFullYear()} Myomentum &nbsp;&middot;&nbsp; <a href="https://www.screenstory.co" style="text-decoration:underline">Website by Screen Story Co.</a>
   </footer>
 
   <script is:inline>
@@ -579,6 +594,15 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
         nav.classList.toggle('open');
       });
     })();
+    // header elevate on scroll
+    const hdr = document.querySelector('.site-header');
+    const onScroll = () => hdr && hdr.classList.toggle('scrolled', window.scrollY > 8);
+    addEventListener('scroll', onScroll, {passive:true}); onScroll();
+    // reveal-on-scroll
+    const els = document.querySelectorAll('.sheet, .quote, .hero-inner');
+    els.forEach(e => e.classList.add('reveal'));
+    const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }}), {threshold:.12});
+    els.forEach(e => io.observe(e));
   </script>
 </body>
 </html>
