@@ -66,5 +66,6 @@ const posts = (await getCollection('blog')).slice(0,2);
 .hours{list-style:none;max-width:26rem} .hours li{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);font-family:"Libre Franklin",sans-serif;font-size:.95rem}
 .btn{display:inline-block;margin-top:1rem;padding:.7rem 1.2rem;background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase}
 .trusted{display:flex;gap:2rem;align-items:center;flex-wrap:wrap;justify-content:flex-start} .trusted img{max-height:56px;width:auto}
-.hide-mobile{} @media(max-width:767px){.hide-mobile{display:none}}
+.quote blockquote{font-size: clamp(.95rem, 3.6vw, 1.02rem);}
+.trusted{justify-content:center; gap:1.2rem;} .trusted img{max-height:42px} .hide-mobile{} @media(max-width:767px){.hide-mobile{display:none} .hero{width:100%; margin-left:0; left:0} .hero-bg img{object-position:center 40%} }
 </style>
