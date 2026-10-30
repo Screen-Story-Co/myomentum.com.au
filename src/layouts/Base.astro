@@ -131,9 +131,10 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     /* Navigation */
     .site-header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(251,251,249,0.88);
+      background: rgba(255,255,255,0.96);
       backdrop-filter: blur(14px) saturate(1.4);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
     }
     .header-inner {
       display: flex;
@@ -168,10 +169,10 @@ const ogImageUrl = new URL(ogImage ?? '/images/hero-bg.jpg', ASSET_ORIGIN).href;
     .site-nav a {
       font-family: var(--font-mono);
       text-transform: uppercase;
-      font-size: 0.66rem;
-      letter-spacing: 0.16em;
-      font-weight: 400;
-      opacity: 0.55;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      opacity: 1;
       position: relative;
       padding-bottom: 2px;
     }
